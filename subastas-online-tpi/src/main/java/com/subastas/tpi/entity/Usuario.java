@@ -64,5 +64,5 @@ public class Usuario {
 //   email varchar [unique]
 //   password varchar [not null] 
 //   telefono varchar
-//   activo boolean [default: true] 
+//   bloqueado boolean [default: false]
 // }
