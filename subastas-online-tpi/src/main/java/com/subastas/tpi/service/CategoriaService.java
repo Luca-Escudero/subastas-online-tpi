@@ -4,14 +4,13 @@ import com.subastas.tpi.dto.request.CategoriaRequestDTO;
 import com.subastas.tpi.dto.response.CategoriaResponseDTO;
 import com.subastas.tpi.entity.Categoria;
 import com.subastas.tpi.repository.CategoriaRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true) //Se aplica solo a métodos de lectura y nos ahorra una línea de código al ubicarla a nivel de clase
 public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
@@ -20,6 +19,7 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
+    @Transactional
     public CategoriaResponseDTO crearCategoria(CategoriaRequestDTO request) {
         Categoria categoriaNueva = toEntityFromResquest(request);
         categoriaRepository.save(categoriaNueva);
