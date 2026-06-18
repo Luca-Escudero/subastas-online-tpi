@@ -68,6 +68,31 @@ public class ProductoService {
         return response;
     }
 
+    @Transactional
+    public ProductoResponseDTO actualizarProducto(Long id, ProductoRequestDTO request){
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con el ID: " + id));
+
+        updateEntityFromRequest(producto, request);
+
+        if (request.categoriaId() != null) {
+            Categoria nuevaCategoria = categoriaRepository.findById(request.categoriaId())
+                    .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+            producto.setCategoria(nuevaCategoria);
+        }
+
+        Producto productoActualizado = productoRepository.save(producto);
+
+        return toResponseFromEntity(productoActualizado, productoActualizado.getCategoria(), productoActualizado.getVendedor());
+    }
+
+    @Transactional
+    public void eliminarProducto(Long id) {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con el ID: " + id));
+        productoRepository.deleteById(id);
+    }
+
     // Mapeos
     private Producto toEntityFromRequest(ProductoRequestDTO request){
         Producto producto = new Producto();
@@ -75,6 +100,12 @@ public class ProductoService {
         producto.setDescripcion(request.descripcion());
         producto.setImagenUrl(request.imagenUrl());
         return producto;
+    }
+
+    private void updateEntityFromRequest(Producto producto, ProductoRequestDTO request){
+        producto.setNombre(request.nombre());
+        producto.setDescripcion(request.descripcion());
+        producto.setImagenUrl(request.imagenUrl());
     }
 
     private ProductoResponseDTO toResponseFromEntity(Producto producto, Categoria categoria, Usuario usuario){
