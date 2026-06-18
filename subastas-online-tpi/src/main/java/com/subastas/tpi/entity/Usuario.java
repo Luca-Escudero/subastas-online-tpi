@@ -38,7 +38,7 @@ public class Usuario {
     private String telefono;
 
     @Column(columnDefinition = "boolean default true")
-    private Boolean bloqueado = false;
+    private Boolean activo = true;
 
 
 
@@ -51,5 +51,5 @@ public class Usuario {
 //   email varchar [unique]
 //   password varchar [not null] 
 //   telefono varchar
-//   bloqueado boolean [default: false]
+//   activo boolean [default: true] 
 // }

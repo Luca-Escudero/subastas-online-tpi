@@ -23,6 +23,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Dejamos 100% público el endpoint de usuarios (para que cualquiera pueda registrarse)
                 .requestMatchers("/api/usuarios", "/api/usuarios/**", "/error").permitAll() 
+                .requestMatchers("/api/productos", "/api/productos/**").permitAll()
                 // A todo el resto del sistema, le pedimos autenticación
                 .anyRequest().authenticated()
             );
