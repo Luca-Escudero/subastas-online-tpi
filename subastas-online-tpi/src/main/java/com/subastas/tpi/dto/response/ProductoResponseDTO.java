@@ -9,4 +9,4 @@ public record ProductoResponseDTO(
     String categoriaNombre,
     Long vendedorId,
     String vendedorNombre
-){} 
+){}
