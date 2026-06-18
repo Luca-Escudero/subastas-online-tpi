@@ -1,12 +1,12 @@
 package com.subastas.tpi.dto.response;
 
 public record ProductoResponseDTO(
-    Integer id,
+    Long id,
     String nombre,
     String descripcion,
     String imagenUrl,
-    Integer categoriaId,
+    Long categoriaId,
     String categoriaNombre,
-    Integer vendedorId,
+    Long vendedorId,
     String vendedorNombre
-){} 
+){}
