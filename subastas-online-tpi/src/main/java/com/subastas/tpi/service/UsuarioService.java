@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.subastas.tpi.dto.request.UsuarioRegistroDTO;
 import com.subastas.tpi.dto.response.UsuarioResponseDTO;
 import com.subastas.tpi.entity.Usuario;
+import com.subastas.tpi.repository.RolRepository;
 import com.subastas.tpi.repository.UsuarioRepository;
 
 @Service
