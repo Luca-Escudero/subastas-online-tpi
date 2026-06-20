@@ -1,5 +1,7 @@
 package com.subastas.tpi.service;
 
+import java.util.List;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -60,5 +62,16 @@ public class UsuarioService {
                 usuarioGuardado.getEmail(),
                 usuarioGuardado.getTelefono(),
                 usuarioGuardado.getActivo());
+
     }
+
+    // Listar todos los usuarios del sistema mapeados a DTO
+    public List<UsuarioResponseDTO> obtenerTodos() {
+        return usuarioRepository.findAll().stream()
+            .map(u -> new UsuarioResponseDTO(
+                u.getId(), u.getNombre(), u.getApellido(), 
+                u.getEmail(), u.getTelefono(), u.getActivo()
+            ))
+            .toList();
+}
 }
