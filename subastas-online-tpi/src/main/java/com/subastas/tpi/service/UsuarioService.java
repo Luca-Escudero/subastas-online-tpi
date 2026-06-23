@@ -12,6 +12,8 @@ import com.subastas.tpi.entity.Usuario;
 import com.subastas.tpi.repository.RolRepository;
 import com.subastas.tpi.repository.UsuarioRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UsuarioService {
 
@@ -61,7 +63,9 @@ public class UsuarioService {
                 usuarioGuardado.getApellido(),
                 usuarioGuardado.getEmail(),
                 usuarioGuardado.getTelefono(),
-                usuarioGuardado.getActivo());
+                usuarioGuardado.getActivo(),
+                usuarioGuardado.getRoles().stream().map(Rol::getNombre).toList());
+                
 
     }
 
@@ -70,8 +74,25 @@ public class UsuarioService {
         return usuarioRepository.findAll().stream()
             .map(u -> new UsuarioResponseDTO(
                 u.getId(), u.getNombre(), u.getApellido(), 
-                u.getEmail(), u.getTelefono(), u.getActivo()
+                u.getEmail(), u.getTelefono(), u.getActivo(),
+                u.getRoles().stream().map(Rol::getNombre).toList()
             ))
             .toList();
-}
+    }
+
+    @Transactional
+    public UsuarioResponseDTO cambiarEstadoUsuario(Long id, boolean activo) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el ID: " + id));
+        
+        usuario.setActivo(activo);
+        Usuario usuarioActualizado = usuarioRepository.save(usuario); 
+        
+        return new UsuarioResponseDTO(
+                usuarioActualizado.getId(), usuarioActualizado.getNombre(), 
+                usuarioActualizado.getApellido(), usuarioActualizado.getEmail(), 
+                usuarioActualizado.getTelefono(), usuarioActualizado.getActivo(),
+                usuarioActualizado.getRoles().stream().map(Rol::getNombre).toList());
+
+    }
 }
