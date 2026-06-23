@@ -32,21 +32,35 @@ public class SecurityConfig {
             
             // Configuracion las reglas de las rutas
             .authorizeHttpRequests(auth -> auth
-                // Registro y Login (Públicos)
-                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/usuarios").permitAll()
-                .requestMatchers("/api/auth/login", "/error").permitAll()
+                // rutas publicas (Cualquiera puede entrar sin Token)
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/usuarios").permitAll() // Registro
+                .requestMatchers("/api/auth/login", "/error").permitAll() // Login y manejo de errores
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Swagger
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/categorias/**").permitAll() // Ver el catálogo
                 
-                // Administración de Usuarios (SOLO ADMIN)
-                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/usuarios").hasRole("ADMIN")
+                // Administracion del sistema (Solo ADMIN)
+                // Control total sobre usuarios y la estructura de categorías del sistema
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/usuarios/**").hasRole("ADMIN")
                 .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/usuarios/*/estado").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/categorias/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/categorias/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/categorias/**").hasRole("ADMIN")
 
-                // Endpoints del sistema (Lectura para todos los logueados, escritura solo vendedores)
-                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/productos/**", "/api/categorias/**", "/api/subastas/**").authenticated()
+                // Gestion vendedores (Solo SELLER)
+                // Creación y modificación de sus propios productos y subastas
                 .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/productos/**", "/api/subastas/**").hasRole("SELLER")
                 .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/productos/**", "/api/subastas/**").hasRole("SELLER")
                 .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/productos/**", "/api/subastas/**").hasRole("SELLER")
                 
-                // Todo lo demás cerrado
+                // Clientes (Solo USER)
+                // Participación en las subastas
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/pujas/**").hasRole("USER")
+
+                // Vista general (Cualquier usuario con un Token válido)
+                // Ver productos y subastas activas
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/productos/**", "/api/subastas/**").authenticated()
+                
+                // Cualquier ruta que no esté explícitamente declarada arriba, exige estar logueado
                 .anyRequest().authenticated()
             )
 

@@ -13,9 +13,6 @@ public record ProductoRequestDTO(
     
     String imagenUrl, 
     
-    @NotNull(message = "El ID del vendedor es obligatorio")
-    Long vendedorId,
-    
     @NotNull(message = "El ID de la categoría es obligatorio")
     Long categoriaId
 ){}
