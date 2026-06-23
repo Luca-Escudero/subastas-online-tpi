@@ -1,6 +1,8 @@
 package com.subastas.tpi.service;
 
 import com.subastas.tpi.dto.response.CategoriaResponseDTO;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.subastas.tpi.dto.request.ProductoRequestDTO;
@@ -36,9 +38,13 @@ public class ProductoService {
         Categoria categoria = categoriaRepository.findById(request.categoriaId())
                 .orElseThrow(() -> new RuntimeException("Error: La categoría con ID " + request.categoriaId() + " no existe."));
 
+        // Extraer el id del vendedor del token
+        String emailAutenticado = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        
         // Validar que el usuario (vendedor) exista
-        Usuario vendedor = usuarioRepository.findById(request.vendedorId())
-                .orElseThrow(() -> new RuntimeException("Error: El usuario con ID " + request.vendedorId() + " no existe."));
+        Usuario vendedor = usuarioRepository.findByEmail(emailAutenticado)
+                .orElseThrow(() -> new RuntimeException("Error: El usuario autenticado no existe en el sistema."));
 
         Producto nuevoProducto = toEntityFromRequest(request);
         nuevoProducto.setCategoria(categoria);
