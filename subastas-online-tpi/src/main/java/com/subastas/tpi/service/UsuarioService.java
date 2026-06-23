@@ -1,5 +1,7 @@
 package com.subastas.tpi.service;
 
+import java.util.List;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,8 @@ import com.subastas.tpi.entity.Rol;
 import com.subastas.tpi.entity.Usuario;
 import com.subastas.tpi.repository.RolRepository;
 import com.subastas.tpi.repository.UsuarioRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class UsuarioService {
@@ -59,6 +63,36 @@ public class UsuarioService {
                 usuarioGuardado.getApellido(),
                 usuarioGuardado.getEmail(),
                 usuarioGuardado.getTelefono(),
-                usuarioGuardado.getActivo());
+                usuarioGuardado.getActivo(),
+                usuarioGuardado.getRoles().stream().map(Rol::getNombre).toList());
+                
+
+    }
+
+    // Listar todos los usuarios del sistema mapeados a DTO
+    public List<UsuarioResponseDTO> obtenerTodos() {
+        return usuarioRepository.findAll().stream()
+            .map(u -> new UsuarioResponseDTO(
+                u.getId(), u.getNombre(), u.getApellido(), 
+                u.getEmail(), u.getTelefono(), u.getActivo(),
+                u.getRoles().stream().map(Rol::getNombre).toList()
+            ))
+            .toList();
+    }
+
+    @Transactional
+    public UsuarioResponseDTO cambiarEstadoUsuario(Long id, boolean activo) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el ID: " + id));
+        
+        usuario.setActivo(activo);
+        Usuario usuarioActualizado = usuarioRepository.save(usuario); 
+        
+        return new UsuarioResponseDTO(
+                usuarioActualizado.getId(), usuarioActualizado.getNombre(), 
+                usuarioActualizado.getApellido(), usuarioActualizado.getEmail(), 
+                usuarioActualizado.getTelefono(), usuarioActualizado.getActivo(),
+                usuarioActualizado.getRoles().stream().map(Rol::getNombre).toList());
+
     }
 }
