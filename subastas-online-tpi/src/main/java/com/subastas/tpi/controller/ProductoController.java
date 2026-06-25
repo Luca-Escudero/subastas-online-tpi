@@ -1,6 +1,5 @@
 package com.subastas.tpi.controller;
 
-import com.subastas.tpi.dto.response.CategoriaResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
