@@ -21,11 +21,13 @@ public class SubastaService {
     private final SubastaRepository subastaRepository;
     private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final HistorialEstadoService historialEstadoService;
 
-    public SubastaService(SubastaRepository subastaRepository, ProductoRepository productoRepository, UsuarioRepository usuarioRepository) {
+    public SubastaService(SubastaRepository subastaRepository, ProductoRepository productoRepository, UsuarioRepository usuarioRepository, HistorialEstadoService historialEstadoService) {
         this.subastaRepository = subastaRepository;
         this.productoRepository = productoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.historialEstadoService = historialEstadoService;
     }
 
     @Transactional
@@ -41,7 +43,35 @@ public class SubastaService {
 
         Subasta subastaGuardada = subastaRepository.save(nuevaSubasta);
 
+        historialEstadoService.registrarCambioEstado(
+                subastaGuardada,
+                subastaGuardada.getEstado(),
+                null,
+                "Subasta creada en estado BORRADOR"
+        );
+
         return toResponseFromEntity(subastaGuardada, producto);
+    }
+
+    public SubastaResponseDTO publicarSubasta(Long id){
+        Subasta subasta = subastaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Error: La subasta con el ID " + id + " no existe."));
+
+        if (subasta.getEstado() != EstadoSubasta.BORRADOR){
+            throw new RuntimeException("Solo se pueden publicar subastas en estado BORRADOR.");
+        }
+
+        subasta.setEstado(EstadoSubasta.PUBLICADA);
+        subastaRepository.save(subasta);
+
+        historialEstadoService.registrarCambioEstado(
+                subasta,
+                EstadoSubasta.PUBLICADA,
+                null,
+                "Subasta publicada"
+        );
+
+        return toResponseFromEntity(subasta, subasta.getProducto());
     }
 
     public List<SubastaResponseDTO> obtenerTodos(){

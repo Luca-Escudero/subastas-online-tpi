@@ -1,5 +1,6 @@
 package com.subastas.tpi.service;
 
+import com.subastas.tpi.dto.response.HistorialEstadoResponseDTO;
 import com.subastas.tpi.entity.EstadoSubasta;
 import com.subastas.tpi.entity.HistorialEstado;
 import com.subastas.tpi.entity.Subasta;
@@ -8,6 +9,7 @@ import com.subastas.tpi.repository.HistorialEstadoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,7 +33,30 @@ public class HistorialEstadoService {
         historialEstadoRepository.save(historial);
     }
 
-    public List<HistorialEstado> obtenerHistorialPorSubasta(Long subastaId) {
-        return historialEstadoRepository.findBySubastaIdOrderByFechaAsc(subastaId);
+    public List<HistorialEstadoResponseDTO> obtenerHistorialPorSubasta(Long subastaId) {
+        return toResponseFromEntity(historialEstadoRepository.findBySubastaIdOrderByFechaAsc(subastaId));
+    }
+
+    private List<HistorialEstadoResponseDTO> toResponseFromEntity(List<HistorialEstado> historialEstados){
+        List<HistorialEstadoResponseDTO> responses = new ArrayList<>();
+
+        for (HistorialEstado historial : historialEstados) {
+
+            Long usuarioId = null;
+            if (historial.getUsuario() != null) {
+                usuarioId = historial.getUsuario().getId();
+            }
+
+            HistorialEstadoResponseDTO dto = new HistorialEstadoResponseDTO(
+                    historial.getNombreEstado(),
+                    historial.getFecha(),
+                    usuarioId,
+                    historial.getDetalle()
+            );
+
+            responses.add(dto);
+        }
+
+        return responses;
     }
 }
