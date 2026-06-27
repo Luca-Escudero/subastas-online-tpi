@@ -24,6 +24,12 @@ public class SubastaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PatchMapping("/{id}/publicacion")
+    public ResponseEntity<SubastaResponseDTO> publicar (@PathVariable Long id){
+        SubastaResponseDTO response = subastaService.publicarSubasta(id);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping
     public ResponseEntity<List<SubastaResponseDTO>> obtenerTodos(){
         return ResponseEntity.ok(subastaService.obtenerTodos());
