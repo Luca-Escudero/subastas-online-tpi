@@ -23,10 +23,6 @@ public class PujaController {
         // Obtenés el ID del usuario autenticado desde el contexto de seguridad
         Long usuarioId = Long.valueOf(principal.getName()); 
         
-        // Nota: Si para probar en Postman todavía no configuraron Spring Security con Principal, 
-        // podés comentar la línea de arriba y usar esta temporalmente pasando el ID en la cabecera:
-        // Long usuarioId = Long.valueOf(request.getHeader("X-Usuario-Id"));
-        
         PujaResponseDTO respuesta = pujaService.realizarPuja(dto, usuarioId);
         
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
