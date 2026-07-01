@@ -95,4 +95,14 @@ public class UsuarioService {
                 usuarioActualizado.getRoles().stream().map(Rol::getNombre).toList());
 
     }
+
+    public UsuarioResponseDTO obtenerPorEmail(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el email: " + email));
+        return new UsuarioResponseDTO(
+                usuario.getId(), usuario.getNombre(), 
+                usuario.getApellido(), usuario.getEmail(), 
+                usuario.getTelefono(), usuario.getActivo(),
+                usuario.getRoles().stream().map(Rol::getNombre).toList());
+    }
 }

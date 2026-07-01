@@ -41,5 +41,11 @@ public class UsuarioController {
         UsuarioResponseDTO response = usuarioService.cambiarEstadoUsuario(id, activo);
         return ResponseEntity.ok(response);
     }
-    
+
+    // OBTENER USUARIO ACTUAL LOGUEADO
+    @GetMapping("/me")
+    public ResponseEntity<UsuarioResponseDTO> obtenerActual(java.security.Principal principal) {
+        UsuarioResponseDTO response = usuarioService.obtenerPorEmail(principal.getName());
+        return ResponseEntity.ok(response);
+    }
 }

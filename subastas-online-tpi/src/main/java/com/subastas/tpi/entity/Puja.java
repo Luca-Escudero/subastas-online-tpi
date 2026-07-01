@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset; // Obtiene la fecha y hora actual en formato UTC (GMT 0).
 
 @Getter @Setter
 @NoArgsConstructor
@@ -32,6 +33,6 @@ public class Puja {
     // Un método automático para que la fecha se ponga sola antes de guardar
     @PrePersist
     protected void onCreate() {
-        this.fechaPuja = LocalDateTime.now();
+        this.fechaPuja = LocalDateTime.now(ZoneOffset.UTC);// Obtiene la fecha y hora actual en formato UTC (GMT 0).
     }
 }

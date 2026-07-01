@@ -29,9 +29,14 @@ public class SecurityConfig {
         http
             // Desactiva el CSRF. Es obligatorio para que funcionen los POST en APIs REST.
             .csrf(AbstractHttpConfigurer::disable)
-            
+
+            // Habilita CORS usando el bean CorsConfigurationSource 
+            .cors(cors -> {})
+
             // Configuracion las reglas de las rutas
             .authorizeHttpRequests(auth -> auth
+                // Preflight CORS: el navegador manda OPTIONS antes de cada request "compleja"
+                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                 // rutas publicas (Cualquiera puede entrar sin Token)
                 .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/usuarios").permitAll() // Registro
                 .requestMatchers("/api/auth/login", "/error").permitAll() // Login y manejo de errores
@@ -40,6 +45,7 @@ public class SecurityConfig {
                 
                 // Administracion del sistema (Solo ADMIN)
                 // Control total sobre usuarios y la estructura de categorías del sistema
+                .requestMatchers("/api/usuarios/me").authenticated()
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/usuarios/**").hasRole("ADMIN")
                 .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/usuarios/*/estado").hasRole("ADMIN")
                 .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/categorias/**").hasRole("ADMIN")

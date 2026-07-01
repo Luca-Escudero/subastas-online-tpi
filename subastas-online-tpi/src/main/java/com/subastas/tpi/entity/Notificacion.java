@@ -3,6 +3,7 @@ package com.subastas.tpi.entity;
 
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,6 +48,6 @@ public class Notificacion {
     // Un método automático para que la fecha se ponga sola antes de guardar
     @PrePersist
     protected void onCreate() {
-        this.fechaEnvio = LocalDateTime.now();
+        this.fechaEnvio = LocalDateTime.now(ZoneOffset.UTC);
     }
 }

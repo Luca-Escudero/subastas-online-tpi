@@ -9,6 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.security.Principal;
+/**
+     * java.security.Principal representa la identidad (usuario) 
+     * que ha sido autenticada en el sistema. Se usa para obtener el nombre 
+     * del usuario actual mediante principal.getName().
+     */
 
 @RestController
 @RequestMapping("/api/subastas")
@@ -19,14 +25,14 @@ public class SubastaController {
     public SubastaController(SubastaService subastaService) {this.subastaService = subastaService;}
 
     @PostMapping
-    public ResponseEntity<SubastaResponseDTO> crear (@Valid @RequestBody SubastaRequestDTO request){
-        SubastaResponseDTO response = subastaService.crearSubasta(request);
+    public ResponseEntity<SubastaResponseDTO> crear (@Valid @RequestBody SubastaRequestDTO request, Principal principal){
+        SubastaResponseDTO response = subastaService.crearSubasta(request, principal.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PatchMapping("/{id}/publicacion")
-    public ResponseEntity<SubastaResponseDTO> publicar (@PathVariable Long id){
-        SubastaResponseDTO response = subastaService.publicarSubasta(id);
+    @PatchMapping({"/{id}/publicar", "/{id}/publicacion"})
+    public ResponseEntity<SubastaResponseDTO> publicar (@PathVariable Long id, Principal principal){
+        SubastaResponseDTO response = subastaService.publicarSubasta(id, principal.getName());
         return ResponseEntity.ok(response);
     }
 
@@ -42,8 +48,10 @@ public class SubastaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id){
-        subastaService.eliminarSubasta(id);
+    public ResponseEntity<Void> eliminar(@PathVariable Long id, Principal principal){
+        subastaService.eliminarSubasta(id, principal.getName());
         return ResponseEntity.noContent().build();
     }
+
+   
 }

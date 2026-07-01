@@ -9,6 +9,7 @@ import com.subastas.tpi.repository.HistorialEstadoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset; 
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class HistorialEstadoService {
 
         historial.setSubasta(subasta);
         historial.setNombreEstado(nuevoEstado);
-        historial.setFecha(LocalDateTime.now());
+        historial.setFecha(LocalDateTime.now(ZoneOffset.UTC)); // Obtiene la fecha y hora actual en formato UTC (GMT 0).
         historial.setUsuario(usuario);
         historial.setDetalle(detalle);
 
