@@ -5,14 +5,17 @@
 * **Materia:** Programación IV
 * **Integrantes:** Luca Escudero & Tomás Grasso
 
+## Estructura del Repositorio
+Este es un proyecto full-stack estructurado en dos carpetas principales:
+* **`/subastas-online-tpi`**: Backend desarrollado en Java con Spring Boot.
+* **`/subastas-front`**: Frontend desarrollado en Vanilla HTML, CSS (Bootstrap 5 + plantilla AdminLTE) y JS ES6.
+
 ## Descripción del Proyecto
-Este repositorio contiene el diseño y desarrollo completo del Backend (API REST, Base de Datos, Seguridad y Lógica de Negocio) para una plataforma de subastas online. El sistema garantiza la integridad de las pujas bajo entornos de alta concurrencia, respeta reglas temporales estrictas y protege la privacidad de los usuarios según sus roles (USER, SELLER, ADMIN).
+Este sistema de subastas online garantiza la integridad de las pujas en entornos concurrentes, respeta reglas temporales estrictas de apertura/cierre de subastas (con evaluación perezosa en UTC) y protege la privacidad de los usuarios controlando permisos basados en roles (**USER**, **SELLER**, **ADMIN**).
 
 ## Stack Tecnológico
-* **Lenguaje:** Java (JDK 21)
-* **Framework Principal:** Spring Boot
-* **Base de Datos:** MySQL
-* **Seguridad:** Spring Security + JWT (JSON Web Tokens)
+* **Backend:** Java 21, Spring Boot 3, Hibernate/JPA, MySQL, Spring Security + JWT, Swagger UI (OpenAPI 3).
+* **Frontend:** HTML5, CSS3 (Bootstrap 5, AdminLTE), JavaScript Moderno (módulos ES6).
 
 ---
 
@@ -34,12 +37,19 @@ Para que el sistema se conecte a la base de datos local, es estrictamente necesa
 ### 2. Base de Datos y Tablas (Automático)
 El sistema está configurado para autogestionar su infraestructura de datos. **No es necesario ejecutar scripts SQL manualmente.** Al iniciar la aplicación, el servidor detectará si la base de datos declarada en el `.env` existe; si no existe, la creará automáticamente junto con toda la estructura de tablas y relaciones gracias a Hibernate.
 
-### 3. Ejecutar la Aplicación
-Levantar el servidor ejecutando la clase principal `Application.java` desde su IDE, o utilizando Maven desde la terminal:
+### 3. Ejecutar el Backend
+Levante el servidor de la API ejecutando la clase principal desde su IDE, o utilizando Maven desde la terminal en la carpeta `/subastas-online-tpi`:
 ```bash
 mvn spring-boot:run
-
 ```
+
+### 4. Ejecutar el Frontend
+Para desplegar y ver la interfaz del usuario:
+1. Asegúrese de tener levantado el backend en `http://localhost:8080`.
+2. Sirva los archivos de la carpeta `/subastas-front` usando un servidor estático local.
+   * *Opción recomendada:* Utilizar la extensión **Live Server** de VSCode.
+   * *Opción de consola:* Ejecutar `npx serve .` o `python3 -m http.server` dentro de la carpeta `/subastas-front`.
+   * **Importante:** No abrir el archivo `index.html` haciendo doble clic directo (`file://`), ya que al utilizar módulos ES6 (`type="module"`), el navegador bloqueará su carga por políticas de seguridad de recursos locales.
 
 ---
 
