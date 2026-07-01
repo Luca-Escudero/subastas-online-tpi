@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SubastaRepository extends JpaRepository<Subasta, Long> {
+    boolean existsByProductoId(Long productoId);
 }

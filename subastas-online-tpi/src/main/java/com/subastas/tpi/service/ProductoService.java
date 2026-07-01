@@ -12,6 +12,7 @@ import com.subastas.tpi.entity.Producto;
 import com.subastas.tpi.entity.Usuario;
 import com.subastas.tpi.repository.CategoriaRepository;
 import com.subastas.tpi.repository.ProductoRepository;
+import com.subastas.tpi.repository.SubastaRepository;
 import com.subastas.tpi.repository.UsuarioRepository;
 
 import java.util.ArrayList;
@@ -24,12 +25,14 @@ public class ProductoService {
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
     private final UsuarioRepository usuarioRepository;
+    private final SubastaRepository subastaRepository;
 
     public ProductoService(ProductoRepository productoRepository, CategoriaRepository categoriaRepository,
-            UsuarioRepository usuarioRepository) {
+            UsuarioRepository usuarioRepository, SubastaRepository subastaRepository) {
         this.productoRepository = productoRepository;
         this.categoriaRepository = categoriaRepository;
         this.usuarioRepository = usuarioRepository;
+        this.subastaRepository = subastaRepository;
     }
 
     @Transactional
@@ -96,6 +99,11 @@ public class ProductoService {
     public void eliminarProducto(Long id) {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con el ID: " + id));
+
+        if (subastaRepository.existsByProductoId(id)) {
+            throw new RuntimeException("No se puede eliminar el producto porque está asociado a una o más subastas.");
+        }
+
         productoRepository.deleteById(id);
     }
 

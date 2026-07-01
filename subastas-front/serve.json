@@ -1,0 +1,10 @@
+{
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/pages/register-login/login", "destination": "/pages/register-login/login.html" },
+    { "source": "/pages/user/home-user", "destination": "/pages/user/home-user.html" },
+    { "source": "/pages/seller/home-seller", "destination": "/pages/seller/home-seller.html" },
+    { "source": "/pages/admin/home-admin", "destination": "/pages/admin/home-admin.html" },
+    { "source": "/pages/user/subasta-detail", "destination": "/pages/user/subasta-detail.html" }
+  ]
+}

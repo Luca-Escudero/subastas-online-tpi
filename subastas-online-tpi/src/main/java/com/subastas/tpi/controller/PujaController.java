@@ -1,7 +1,9 @@
 package com.subastas.tpi.controller;
 
+import com.subastas.tpi.dto.request.PujaRequestDTO;
 import com.subastas.tpi.dto.response.PujaResponseDTO;
 import com.subastas.tpi.service.PujaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +21,8 @@ public class PujaController {
     }
 
     @PostMapping
-    public ResponseEntity<PujaResponseDTO> crearPuja(@RequestBody PujaResponseDTO dto, Principal principal) {
-        // Obtenés el ID del usuario autenticado desde el contexto de seguridad
-        Long usuarioId = Long.valueOf(principal.getName()); 
-        
-        PujaResponseDTO respuesta = pujaService.realizarPuja(dto, usuarioId);
+    public ResponseEntity<PujaResponseDTO> crearPuja(@Valid @RequestBody PujaRequestDTO dto, Principal principal) {
+        PujaResponseDTO respuesta = pujaService.realizarPuja(dto, principal.getName());
         
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }
